@@ -281,7 +281,7 @@ Matrix::~Matrix()
 
 std::ostream& operator<<(std::ostream& out, const Matrix& matrix)
 {
-    out << std::setw(8) << std::setprecision(18);
+    out << std::setw(8) << std::setprecision(4);
     for (int i = 0; i < matrix.rows; i++)
     {
         for (int j = 0; j < matrix.cols; j++)

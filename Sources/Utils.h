@@ -1,25 +1,33 @@
 ﻿#pragma once
 
 #include <algorithm>
+#include <complex>
 
 #include "Matrix.h"
 
-Vector operator*(const Vector& l, double lambda);
+using Complex = std::complex<double>;
 
-Vector operator/(const Vector& l, double lambda);
+Vector operator*(const Vector &l, double lambda);
 
-Vector operator*(double lambda, const Vector& l);
+Vector operator/(const Vector &l, double lambda);
 
-Vector operator+(const Vector& l, const Vector& r);
+Vector operator*(double lambda, const Vector &l);
 
-Vector operator-(const Vector& l, const Vector& r);
+Vector operator+(const Vector &l, const Vector &r);
+
+Vector operator-(const Vector &l, const Vector &r);
 
 namespace Utils
 {
-    template <typename T>
+    template<typename T>
     int sgn(T val)
     {
         return (T(0) < val) - (val < T(0));
+    }
+
+    Complex solveQuadratic(double a, double b, double c)
+    {
+        return (-b + std::sqrt(Complex(b * b - 4 * a * c))) / (2 * a);
     }
 
     double CubicNorm(const Matrix &m);
