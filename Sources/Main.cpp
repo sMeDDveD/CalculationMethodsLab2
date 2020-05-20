@@ -13,6 +13,19 @@ std::ostream &operator<<(std::ostream &out, const std::pair<U, V> &pair)
     return out;
 }
 
+template<typename T>
+std::ostream &operator<<(std::ostream &out, const std::vector<T> &v)
+{
+    out << "[";
+    for (auto i = 0; i < v.size() - 1; i++)
+    {
+        out << v[i] << ", ";
+    }
+    out << v.back() << "]" << std::endl;
+
+    return out;
+}
+
 int main()
 {
     double array[] = {
@@ -21,11 +34,6 @@ int main()
             226, -187, 316, -33,
             178, -150, 246, -23};
     auto m = Matrix::FromArray(array, 4, 4);
-    ToHessenbergForm(m);
-    std::cout << m;
-    for (int i = 0; i < 100; i++)
-    {
-        IterationQR(m);
-    }
-    std::cout << m;
+    std::cout << EigQR(m);
+    std::cout << std::endl;
 }

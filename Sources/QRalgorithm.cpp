@@ -5,6 +5,7 @@
 #include <iostream>
 #include "QRalgorithm.h"
 
+
 struct Rotation
 {
     double c;
@@ -114,4 +115,46 @@ void IterationQR(Matrix &h)
     {
         UndoRotation(h, j, rotations[j]);
     }
+}
+
+
+std::vector<Complex> EigQR(Matrix m, int &iter)
+{
+    const int n = m.GetCols();
+    std::vector<Complex> eigValues(n);
+
+    ToHessenbergForm(m);
+
+    double diff = std::numeric_limits<double>::max();
+
+    for (it = 0; it < defaultMaxIterations && std::abs(diff) > defaultEPS; ++it)
+    {
+        diff = 0;
+
+        IterationQR(m);
+
+        for (int d = 0; d < n; d++)
+        {
+            if (d == n - 1 || m(d + 1, d) < asZero)
+            {
+                diff += std::abs(eigValues[d].real() - m(d, d));
+                eigValues[d] = m(d, d);
+            }
+            else
+            {
+                Complex p = eigValues[d];
+
+                double a = 1;
+                double b = -m(d, d) - m(d + 1, d + 1);
+                double c = m(d, d) * m(d + 1, d + 1) - m(d + 1, d) * m(d, d + 1);
+                std::tie(eigValues[d], eigValues[d + 1]) =
+                        Utils::solveQuadratic(a, b, c);
+
+                diff += std::abs(p.real() - eigValues[d].real()) +
+                        std::abs(p.imag() - eigValues[d].imag());
+                d++;
+            }
+        }
+    }
+    return eigValues;
 }

@@ -168,7 +168,8 @@ Vector Utils::GenerateVector(int length, int n)
     return v;
 }
 
-Complex Utils::solveQuadratic(double a, double b, double c)
+std::pair<Complex, Complex> Utils::solveQuadratic(double a, double b, double c)
 {
-    return (-b + std::sqrt(Complex(b * b - 4 * a * c))) / (2 * a);
+    Complex D = std::sqrt(Complex(b * b - 4 * a * c));
+    return {(Complex(-b) + D) / (2 * a), (Complex(-b) - D) / (2 * a)};
 }

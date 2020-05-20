@@ -4,11 +4,12 @@
 
 #include "NonlinearSolvers.h"
 
+
 double NewtonsMethod(double start, const Func1D &f, const Func1D &df, double eps, int &iterations)
 {
     double curr = start;
 
-    for (iterations = 0; iterations < maxIterations && std::abs(f(curr)) > eps; iterations++)
+    for (iterations = 0; iterations < defaultMaxIterations && std::abs(f(curr)) > eps; iterations++)
     {
         curr -= f(curr) / df(curr);
     }

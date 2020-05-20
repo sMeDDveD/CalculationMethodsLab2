@@ -25,7 +25,7 @@ namespace Utils
         return (T(0) < val) - (val < T(0));
     }
 
-    Complex solveQuadratic(double a, double b, double c);
+    std::pair<Complex, Complex> solveQuadratic(double a, double b, double c);
 
     double CubicNorm(const Matrix &m);
 
