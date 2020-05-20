@@ -25,10 +25,7 @@ namespace Utils
         return (T(0) < val) - (val < T(0));
     }
 
-    Complex solveQuadratic(double a, double b, double c)
-    {
-        return (-b + std::sqrt(Complex(b * b - 4 * a * c))) / (2 * a);
-    }
+    Complex solveQuadratic(double a, double b, double c);
 
     double CubicNorm(const Matrix &m);
 

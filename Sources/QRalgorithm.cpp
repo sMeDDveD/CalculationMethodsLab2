@@ -28,6 +28,14 @@ static Vector GetW(Vector a)
     return w;
 }
 
+static Rotation GetRotation(Matrix &m, int i)
+{
+    double a = m(i, i);
+    double b = m(i + 1, i);
+
+    return {.c = a / hypot(a, b), .s = b / hypot(a, b)};
+}
+
 void ToHessenbergForm(Matrix &m)
 {
     int n = m.GetCols();
@@ -46,9 +54,7 @@ void ToHessenbergForm(Matrix &m)
             for (int i = j + 1; i < n; ++i)
             {
                 m(i, column) -= 2 * dot * w[i - offset];
-                std::cout << m(i, column) << std::endl;
             }
-            std::cout << m << std::endl;
         }
 
         // Transforming rows
@@ -61,5 +67,51 @@ void ToHessenbergForm(Matrix &m)
                 m(row, i) -= 2 * dot * w[i - offset];
             }
         }
+    }
+}
+
+void UndoRotation(Matrix &m, int j, const Rotation &r)
+{
+    const int n = m.GetCols();
+
+    Vector lCol = m.GetCol(j);
+    Vector rCol = m.GetCol(j + 1);
+
+    for (int k = 0; k < n; k++)
+    {
+        m(k, j) = r.c * lCol[k] + r.s * rCol[k];
+        m(k, j + 1) = -r.s * lCol[k] + r.c * rCol[k];
+    }
+}
+
+void Rotate(Matrix &m, int i, const Rotation &r)
+{
+    const int n = m.GetCols();
+
+    Vector uRow = m.GetRow(i);
+    Vector lRow = m.GetRow(i + 1);
+
+    for (int k = 0; k < n; k++)
+    {
+        m(i, k) = r.c * uRow[k] + r.s * lRow[k];
+        m(i + 1, k) = -r.s * uRow[k] + r.c * lRow[k];
+    }
+}
+
+void IterationQR(Matrix &h)
+{
+    const int n = h.GetCols();
+    std::vector<Rotation> rotations(n - 1);
+
+    for (int i = 0; i < n - 1; ++i)
+    {
+        auto r = GetRotation(h, i);
+        rotations[i] = r;
+        Rotate(h, i, r);
+    }
+
+    for (int j = 0; j < n - 1; ++j)
+    {
+        UndoRotation(h, j, rotations[j]);
     }
 }

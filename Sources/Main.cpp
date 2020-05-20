@@ -23,4 +23,9 @@ int main()
     auto m = Matrix::FromArray(array, 4, 4);
     ToHessenbergForm(m);
     std::cout << m;
+    for (int i = 0; i < 100; i++)
+    {
+        IterationQR(m);
+    }
+    std::cout << m;
 }
