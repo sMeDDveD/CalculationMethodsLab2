@@ -148,7 +148,7 @@ std::vector<Complex> EigQR(Matrix m, int &iter)
                 double b = -m(d, d) - m(d + 1, d + 1);
                 double c = m(d, d) * m(d + 1, d + 1) - m(d + 1, d) * m(d, d + 1);
                 std::tie(eigValues[d], eigValues[d + 1]) =
-                        Utils::solveQuadratic(a, b, c);
+                        Utils::SolveQuadratic(a, b, c);
 
                 diff += std::abs(p.real() - eigValues[d].real()) +
                         std::abs(p.imag() - eigValues[d].imag());
