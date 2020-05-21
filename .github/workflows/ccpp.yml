@@ -16,4 +16,4 @@ jobs:
     - name: make
       run: cmake -S . -B build && cmake --build build
     - name: run
-      run: cd build && ./CalculationMethods
+      run: cd build && ./CalculationMethodsLab2
