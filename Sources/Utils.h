@@ -35,6 +35,8 @@ namespace Utils
 
     double ScalarMultiply(const Vector &l, const Vector &r);
 
+    Vector Normalized(const Vector &v);
+
     Vector GenerateVector(int length, int n);
 
     Vector SubVectors(const Vector &l, const Vector &r);

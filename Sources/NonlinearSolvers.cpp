@@ -28,11 +28,12 @@ double DiscreteNewtonsMethod(double start, const Func1D &f, double h, double eps
 std::pair<double, double> Bisection(std::pair<double, double> interval, const Func1D &f, double eps, int &iterations)
 {
     auto[a, b] = interval;
+    iterations = 0;
     while (std::abs(b - a) > eps)
     {
         iterations++;
         double mid = (b + a) / 2;
-        if (f(mid) > 0)
+        if (f(mid) * f(a) < 0)
         {
             b = mid;
         }

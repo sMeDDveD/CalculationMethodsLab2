@@ -251,19 +251,11 @@ Matrix Matrix::GenerateMatrix(int n, int param)
 
     for (int i = 0; i < n; ++i)
     {
-        for (int j = i + 1; j < n; j++)
-        {
-            const auto generated = distr(device);
-            m(i, j) = m(j, i) = generated;
-        }
-
-        double d = 0;
-        m(i, i) = 0;
         for (int j = 0; j < n; j++)
         {
-            d += std::abs(m(i, j));
+            const auto generated = distr(device);
+            m(i, j) = generated;
         }
-        m(i, i) = d;
     }
 
     return m;

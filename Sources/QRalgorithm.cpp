@@ -2,7 +2,6 @@
 // Created by deem on 19.05.20.
 //
 
-#include <iostream>
 #include "QRalgorithm.h"
 
 
@@ -40,7 +39,6 @@ static Rotation GetRotation(Matrix &m, int i)
 void ToHessenbergForm(Matrix &m)
 {
     int n = m.GetCols();
-    std::cout << m << std::endl;
 
     for (int j = 0; j < n - 2; ++j)
     {

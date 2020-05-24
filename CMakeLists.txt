@@ -8,7 +8,7 @@ set(SRC_LIST
         Sources/Matrix.cpp
         Sources/Utils.cpp
         Sources/NonlinearSolvers.cpp
-        Sources/QRalgorithm.cpp Sources/QRalgorithm.h Sources/Defs.h)
+        Sources/QRalgorithm.cpp Sources/QRalgorithm.h Sources/Defs.h Sources/PowerIteration.cpp Sources/PowerIteration.h)
 
 include_directories(Sources)
 

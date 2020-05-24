@@ -173,3 +173,8 @@ std::pair<Complex, Complex> Utils::SolveQuadratic(double a, double b, double c)
     Complex D = std::sqrt(Complex(b * b - 4 * a * c));
     return {(Complex(-b) + D) / (2 * a), (Complex(-b) - D) / (2 * a)};
 }
+
+Vector Utils::Normalized(const Vector &v)
+{
+    return v / Utils::EuclideanNorm(v);
+}
