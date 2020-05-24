@@ -1,0 +1,28 @@
+Power method: 
+Min time: 3
+Max time: 467
+Avg time: 125.2033333333333
+Avg norm: 4836.432896850251
+
+QR-algorithm: 
+Min time: 2
+Max time: 436
+Avg time: 50.98333333333333
+
+
+First root: 
+Bisection: [0.3802337646484376, 0.380291748046875]
+n = 15
+Discrete Newton's: 0.3802785000587798
+n = 5
+Newton's: 0.3802785000587798
+n = 2
+
+Second root: 
+Bisection: [9.4766845703125, 9.47674560546875]
+n = 15
+Discrete Newton's: 9.476721809664292
+n = 3
+Newton's: 9.476721809664292
+n = 2
+

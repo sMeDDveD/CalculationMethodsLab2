@@ -12,7 +12,6 @@ double NewtonsMethod(double start, const Func1D &f, const Func1D &df, double eps
 
     for (iterations = 0; iterations < defaultMaxIterations && std::abs(f(curr)) > eps; iterations++)
     {
-        std::cout << std::abs(f(curr)) << " ";
         curr -= f(curr) / df(curr);
     }
     return curr;

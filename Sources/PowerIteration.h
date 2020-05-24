@@ -10,8 +10,8 @@ struct EigenAnswer
     double value;
 };
 
-bool CheckEigen(const Matrix &m, std::initializer_list<EigenAnswer> c, double eps);
+bool TestEigen(const Matrix &m, std::initializer_list<EigenAnswer> c, double eps);
 
 EigenAnswer RealEigen(double y, const Vector &u, const Matrix &m);
 
-EigenAnswer PowerIterationMethods(const Matrix &m, int &iter = it);
+EigenAnswer PowerIterationMethod(const Matrix &m, int &iter = it);

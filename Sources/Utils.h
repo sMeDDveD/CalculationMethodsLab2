@@ -27,6 +27,8 @@ namespace Utils
 
     std::pair<Complex, Complex> SolveQuadratic(double a, double b, double c);
 
+    double EigValueNorm(const Matrix &m, const Vector &v, double lambda);
+
     double CubicNorm(const Matrix &m);
 
     double EuclideanNorm(const Vector &v);

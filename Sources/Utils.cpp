@@ -178,3 +178,8 @@ Vector Utils::Normalized(const Vector &v)
 {
     return v / Utils::EuclideanNorm(v);
 }
+
+double Utils::EigValueNorm(const Matrix &m, const Vector &v, double lambda)
+{
+    return Utils::EuclideanNorm(m * v - lambda * v);
+}

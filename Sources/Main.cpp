@@ -8,6 +8,7 @@
 #include "Functions.h"
 #include "QRalgorithm.h"
 #include "Matrix.h"
+#include "PowerIteration.h"
 
 constexpr double mainEPS = 1e-15;
 constexpr double bisectionEPS = 1e-4;
@@ -27,9 +28,20 @@ std::ostream &operator<<(std::ostream &out, const std::vector<T> &v)
     {
         out << v[i] << ", ";
     }
-    out << v.back() << "]" << std::endl;
+    out << v.back() << "]";
 
     return out;
+}
+
+std::pair<EigenAnswer, double> task2(const Matrix &A)
+{
+    std::chrono::time_point<std::chrono::high_resolution_clock> start, end;
+
+    start = std::chrono::high_resolution_clock::now();
+    auto ans = PowerIterationMethod(A);
+    end = std::chrono::high_resolution_clock::now();
+
+    return {ans, std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()};
 }
 
 double task3(Matrix A)
@@ -67,12 +79,21 @@ task8(const std::pair<double, double> &interval, const Func1D &f, double h)
     return {ans, iterations};
 }
 
-void loop(int count = 1)
+void loop(int count)
 {
+    std::ofstream fout("report.txt");
+    std::ofstream vout("norms.txt");
+
     double minTimeQR, maxTimeQR;
     minTimeQR = std::numeric_limits<double>::max();
     maxTimeQR = std::numeric_limits<double>::min();
     double allTimeQR = 0;
+
+    double minTimePI, maxTimePI;
+    minTimePI = std::numeric_limits<double>::max();
+    maxTimePI = std::numeric_limits<double>::min();
+    double allTimePI = 0;
+    double avgNorm = 0;
 
     auto[firstRootBisection, firstRootIt] = task6({0.1, 2}, Functions::f, bisectionEPS);
     auto[secondRootBisection, secondRootIt] =task6({8, 10}, Functions::f, bisectionEPS);
@@ -86,32 +107,51 @@ void loop(int count = 1)
     for (int i = 0; i < count; ++i)
     {
         Matrix A = Matrix::GenerateMatrix(10, variant);
-        auto time = task3(A);
-        allTimeQR += time;
-        minTimeQR = std::min(minTimeQR, time);
-        maxTimeQR = std::max(maxTimeQR, time);
+        auto timeQR = task3(A);
+
+        allTimeQR += timeQR;
+        minTimeQR = std::min(minTimeQR, timeQR);
+        maxTimeQR = std::max(maxTimeQR, timeQR);
+
+        auto[ansPI, timePI] = task2(A);
+        allTimePI += timePI;
+        minTimePI = std::min(minTimePI, timePI);
+        maxTimePI = std::max(maxTimePI, timePI);
+        avgNorm += Utils::EigValueNorm(A, ansPI.vector, ansPI.value);
+
+        vout << "Value: " << ansPI.value << std::endl;
+        vout << "Vector: " << ansPI.vector << std::endl;
+        vout << "Norm: " << Utils::EigValueNorm(A, ansPI.vector, ansPI.value) << std::endl;
+        vout << std::endl;
     }
 
-    std::cout << std::setprecision(std::numeric_limits<double>::digits10 + 1);
+    fout << std::setprecision(std::numeric_limits<double>::digits10 + 1);
 
-    std::cout << "QR-algorithm: " << std::endl;
-    std::cout << "Min time: " << minTimeQR << std::endl;
-    std::cout << "Max time: " << maxTimeQR << std::endl;
-    std::cout << "Avg time: " << allTimeQR / count << std::endl;
-    std::cout << std::endl;
+    fout << "Power method: " << std::endl;
+    fout << "Min time: " << minTimePI << std::endl;
+    fout << "Max time: " << maxTimePI << std::endl;
+    fout << "Avg time: " << allTimePI / count << std::endl;
+    fout << "Avg norm: " << avgNorm / count << std::endl;
+    fout << std::endl;
 
-    std::cout << std::endl;
-    std::cout << "First root: " << std::endl;
-    std::cout << "Bisection: " << firstRootBisection << "n = " << firstRootIt << std::endl;
-    std::cout << "Discrete Newton's: " << firstDNewton << std::endl << "n = " << firstDNewtonIt << std::endl;
-    std::cout << "Newton's: " << firstNewton << std::endl << "n = " << firstNewtonIt << std::endl;
+    fout << "QR-algorithm: " << std::endl;
+    fout << "Min time: " << minTimeQR << std::endl;
+    fout << "Max time: " << maxTimeQR << std::endl;
+    fout << "Avg time: " << allTimeQR / count << std::endl;
+    fout << std::endl;
 
-    std::cout << std::endl;
-    std::cout << "Second root: " << std::endl;
-    std::cout << "Bisection: " << secondRootBisection << "n = " << secondRootIt << std::endl;
-    std::cout << "Discrete Newton's: " << secondDNewton << std::endl << "n = " << secondDNewtonIt << std::endl;
-    std::cout << "Newton's: " << secondNewton << std::endl << "n = " << secondNewtonIt << std::endl;
-    std::cout << std::endl;
+    fout << std::endl;
+    fout << "First root: " << std::endl;
+    fout << "Bisection: " << firstRootBisection << "n = " << firstRootIt << std::endl;
+    fout << "Discrete Newton's: " << firstDNewton << std::endl << "n = " << firstDNewtonIt << std::endl;
+    fout << "Newton's: " << firstNewton << std::endl << "n = " << firstNewtonIt << std::endl;
+
+    fout << std::endl;
+    fout << "Second root: " << std::endl;
+    fout << "Bisection: " << secondRootBisection << "n = " << secondRootIt << std::endl;
+    fout << "Discrete Newton's: " << secondDNewton << std::endl << "n = " << secondDNewtonIt << std::endl;
+    fout << "Newton's: " << secondNewton << std::endl << "n = " << secondNewtonIt << std::endl;
+    fout << std::endl;
 }
 
 void stepping(auto interval)
@@ -142,7 +182,7 @@ int main()
             (-7+15*n)/2, (1+n)/2, (7-n)/2, (1+n)/2, (11-13*n)/2, (-7+9*n)/2, 1+n, 2*(-1+n), (3-5*n)/2, (-5+11*n)/2, (1-3*n)/2, (1+n)/2, (-1+3*n)/2, (1-3*n)/2, (-1+3*n)/2, (1-3*n)/2, 0, 0, (-1+3*n)/2, (1-3*n)/2, -29.0/2+2*n, -5.0/2+2*n, 5.0/2+n, -5.0/2+2*n, 29.0/2-2*n, -21.0/2+2*n, 0, -4, 13.0/2-2*n, -21.0/2+2*n, (17+3*n)/2, (5+n)/2, (-5+n)/2, 5*(1+n)/2, -3*(7+n)/2, 3*(5+n)/2, -2, 5, -3*(5+n)/2, 3*(7+n)/2, (-55+9*n)/2, (-11+n)/2, (11-n)/2, (-11+n)/2, (63-11*n)/2, 9*(-5+n)/2,
             3-n, -11+2*n, (33-5*n)/2, 7*(-7+n)/2, -59.0/2+5*n, -11.0/2+n, 11.0/2-n, -11.0/2+n, 63.0/2-7*n, -43.0/2+6*n, 2-2*n, 2*(-6+n), 35.0/2-3*n, -55.0/2+3*n, -2+5*n/2, n/2, -n/2, n/2, 3-7*n/2, -2+5*n/2, -n, -1+n, 1-3*n/2, -1+3*n/2, -5.0/2-4*n, -5.0/2, -3.0/2, -5.0/2, 11.0/2+3*n, -11.0/2-2*n, 1-n, 0, 5.0/2+n, -1.0/2-2*n, 5*(5+2*n), 7+2*n, -3-2*n, 7+2*n, -30-11*n, 23+8*n, -3-n, 3*(3+n), -4*(4+n), 21+6*n, 8+3*n, 2+n, -2-n, 2+n, -11-4*n, 8+3*n, -1-n, 3+n, -5-2*n, 2*(3+n)};
     auto m = Matrix::FromArray(A, 10, 10);
-    loop(10);
+    loop(300);
     std::cout << EigQR(m);
     std::cout << std::endl;
 }
