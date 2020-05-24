@@ -133,7 +133,7 @@ std::vector<Complex> EigQR(Matrix m, int &iter)
 
         for (int d = 0; d < n; d++)
         {
-            if (d == n - 1 || m(d + 1, d) < asZero)
+            if (d == n - 1 || std::abs(m(d + 1, d)) < asZero)
             {
                 diff += std::abs(eigValues[d].real() - m(d, d));
                 eigValues[d] = m(d, d);
@@ -148,8 +148,8 @@ std::vector<Complex> EigQR(Matrix m, int &iter)
                 std::tie(eigValues[d], eigValues[d + 1]) =
                         Utils::SolveQuadratic(a, b, c);
 
-                diff += std::abs(p.real() - eigValues[d].real()) +
-                        std::abs(p.imag() - eigValues[d].imag());
+                diff += 2 * (std::abs(p.real() - eigValues[d].real()) +
+                        std::abs(p.imag() - eigValues[d].imag()));
                 d++;
             }
         }
