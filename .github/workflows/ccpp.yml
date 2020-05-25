@@ -18,4 +18,4 @@ jobs:
     - name: run
       run: cd build && ./CalculationMethodsLab2
     - name: check
-      run: cd reports && cat report.txt
+      run: cd Reports && cat report.txt
