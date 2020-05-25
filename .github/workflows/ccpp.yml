@@ -17,3 +17,5 @@ jobs:
       run: cmake -S . -B build && cmake --build build
     - name: run
       run: cd build && ./CalculationMethodsLab2
+    - name: check
+      run: cd ../reports && cat report.txt
